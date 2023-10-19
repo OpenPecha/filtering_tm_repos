@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "Python>=3.10.12",
+  "Python==3.10.12",
   "GitPython>=3.1.40",
 ]
 
