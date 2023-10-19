@@ -7,18 +7,17 @@
 
 <!-- Replace with 1-sentence description about what this tool is or does.-->
 
-<h3 align="center">Use this repo template for all new Python projects.</h3>
+<h3 align="center">Filter all the TMs containing Dates.</h3>
 
 ## Description
 
-Project description goes here.
+The task involves extracting date mentions from all repositories that start with "TM" in the "MonlamAI" organization on GitHub. We will scan through the text files in these repositories and identify any text that refers to dates in various formats. The goal is to compile a list of repositories that contain such date mentions.
 
 ## Project owner(s)
 
 <!-- Link to the repo owners' github profiles -->
 
-- [@10zinten](https://github.com/10zinten)
-- [@evanyerburgh](https://github.com/evanyerburgh)
+- [@gangagyats4364](https://github.com/gangagyatso4364)
 
 ## Integrations
 
