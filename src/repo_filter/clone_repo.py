@@ -41,6 +41,7 @@ def find_date_mentions_in_repo(repo, date_patterns):
     return False
 
 
+# date patterns are added here in this funciton
 def get_date_patterns():
     patterns = [
         r"\d{4}-\d{2}-\d{2}",  # YYYY-MM-DD, YYYY-DD-MM
