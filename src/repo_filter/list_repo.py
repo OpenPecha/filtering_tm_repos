@@ -50,20 +50,10 @@ def list_repos_starting_with_tm(token, org_name):
         return None
 
 
-def write_file(data, filename):
-    with open(filename, "w") as file:
+def write_to_file(data, filename):
+    with open(filename, "w") as my_file:
         for line in data:
-            file.write(line + "\n")  # The '\n' is a newline character
-
-
-def get_tm_repo_list(filepath):
-    with open(filepath) as file:
-        # Read the lines and strip whitespace
-        lines = file.readlines()
-        lines = [line.strip() for line in lines]
-        # Convert the lines to integers (or other appropriate data types)
-        my_list = [str(line) for line in lines]
-    return my_list
+            my_file.write(line + "\n")  # The '\n' is a newline character
 
 
 # Usage
@@ -72,12 +62,12 @@ if __name__ == "__main__":
         "Personal Token"  # replace with your GitHub personal access token
     )
     organization_name = "MonlamAI"  # or 'monlamai' if that's the actual name
-    filename = "list.txt"
+    all_tm_repo = "list.txt"
     repositories = list_repos_starting_with_tm(personal_access_token, organization_name)
 
     if repositories is not None:
         cnt = 0
-        write_file(repositories, filename)
+        write_to_file(repositories, all_tm_repo)
         print('Repositories starting with "tm":')
         for repo_name in repositories:
             cnt = cnt + 1
