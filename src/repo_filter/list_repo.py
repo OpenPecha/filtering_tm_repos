@@ -51,6 +51,15 @@ def list_repos_starting_with_tm(token, org_name):
 
 
 def write_to_file(data, filename):
+    """
+    Write list items to a file, each on a new line.
+
+    Args:
+        data (list of str): Content to write.
+        filename (str): Target file path.
+
+    Note: Doesn't return a value.
+    """
     with open(filename, "w") as my_file:
         for line in data:
             my_file.write(line + "\n")  # The '\n' is a newline character
