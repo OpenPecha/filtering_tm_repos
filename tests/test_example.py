@@ -3,8 +3,8 @@ from repo_filter.testing import get_tm_repo_list
 
 
 def test_get_tm_repo_list():
-    filepath1 = "path to file1"
-    filepath2 = "path to file2"
+    filepath1 = "/home/gangagyatso/Desktop/project3/filtering_tm_repos/tests/list1.txt"
+    filepath2 = "/home/gangagyatso/Desktop/project3/filtering_tm_repos/tests/list2.txt"
     assert get_tm_repo_list(filepath1, filepath2) == ["4", "5"]
 
 
