@@ -111,7 +111,7 @@ def filter_repositories_with_dates(org_name, token, filepath):
 if __name__ == "__main__":
     # Replace with your GitHub organization name and personal access token
     org_name = "MonlamAI"
-    token = "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"
+    token = "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"
     filepath = "list.txt"
 
     # Get repositories with date mentions
