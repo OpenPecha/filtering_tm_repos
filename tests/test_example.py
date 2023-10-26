@@ -1,4 +1,11 @@
 from repo_filter.example import add_one
+from repo_filter.testing import get_tm_repo_list
+
+
+def test_get_tm_repo_list():
+    filepath1 = "path to file1"
+    filepath2 = "path to file2"
+    assert get_tm_repo_list(filepath1, filepath2) == ["4", "5"]
 
 
 def test_add_one():

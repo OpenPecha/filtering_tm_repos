@@ -19,6 +19,7 @@ classifiers = [
 
 dependencies = [
   "GitPython>=3.1.40",
+  "githug==1.2.7",
 ]
 
 [project.optional-dependencies]
