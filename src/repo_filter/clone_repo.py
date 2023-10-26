@@ -5,6 +5,19 @@ from repo_filter.list_repo import authenticate_github
 
 
 def get_tm_repo_list(filepath1, filepath2):
+    """
+    Compare content of two files and return items unique to the first file.
+
+
+    Args:
+        filepath1 (str): Path to the first file.
+        filepath2 (str): Path to the second file.
+
+    Returns:
+        list of str: Items found in the first file but not in the second.
+    """
+    ...
+
     with open(filepath1) as file1:
         # Read the lines and strip whitespace
         lines = file1.readlines()
@@ -22,9 +35,18 @@ def get_tm_repo_list(filepath1, filepath2):
 
 
 def write_to_file(data, filename):
-    with open(filename, "a") as file:
+    """
+    Write list items to a file, each on a new line.
+
+    Args:
+        data (list of str): Content to write.
+        filename (str): Target file path.
+
+    Note: Doesn't return a value.
+    """
+    with open(filename, "w") as my_file:
         for line in data:
-            file.write(line + "\n")  # The '\n' is a newline character
+            my_file.write(line + "\n")  # The '\n' is a newline character
 
 
 def find_date_mentions_in_repo(repo, date_patterns):
@@ -65,6 +87,15 @@ def find_date_mentions_in_repo(repo, date_patterns):
 
 # date patterns are added here in this funciton
 def get_date_patterns():
+    """
+    Provide regular expression patterns for common date formats.
+
+
+    Returns:
+        list of str: Regular expression patterns corresponding to common date formats.
+    """
+    ...
+
     patterns = [
         r"\d{4}-\d{2}-\d{2}",  # YYYY-MM-DD, YYYY-DD-MM
         r"\d{2}/\d{2}/\d{4}",  # MM/DD/YYYY, DD/MM/YYYY
