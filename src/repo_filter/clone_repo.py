@@ -1,4 +1,5 @@
 import base64
+import json
 import re
 
 from repo_filter.list_repo import authenticate_github
@@ -30,8 +31,10 @@ def find_date_mentions_in_repo(repo, date_patterns):
 
     Returns:
         bool: True if date mentions are found, False otherwise.
+        list: List of detected dates and line numbers.
     """
     try:
+        detected_dates = []
         for file in repo.get_contents(""):
             if file.name.lower().endswith(".txt") and "en" in file.name.lower():
                 try:
@@ -42,10 +45,18 @@ def find_date_mentions_in_repo(repo, date_patterns):
                     file_content = base64.b64decode(file_content_base64).decode(
                         "utf-8", errors="ignore"
                     )
+                    for line_number, line in enumerate(
+                        file_content.split("\n"), start=1
+                    ):
+                        for pattern in date_patterns:
+                            matches = re.findall(pattern, line)
+                            if matches:
+                                detected_dates.append(
+                                    f"Line {line_number}: Dates found - {matches}"
+                                )
 
-                    for pattern in date_patterns:
-                        if re.search(pattern, file_content):
-                            return True
+                    if detected_dates:
+                        return True, detected_dates
                 except UnicodeDecodeError:
                     print(f"Error decoding {file.name}: UnicodeDecodeError")
     except Exception as e:
@@ -53,14 +64,13 @@ def find_date_mentions_in_repo(repo, date_patterns):
             pass  # Ignore empty repository error
         else:
             print(f"Error accessing repository: {e}")
-    return False
+    return False, []
 
 
 # date patterns are added here in this funciton
 def get_date_patterns():
     """
     Provide regular expression patterns for common date formats.
-
 
     Returns:
         list of str: Regular expression patterns corresponding to common date formats.
@@ -73,6 +83,10 @@ def get_date_patterns():
         r"\d{4}/\d{2}/\d{2}",  # YYYY/DD/MM, YYYY/MM/DD
         r"\d{2}-\d{2}-\d{4}",  # DD-MM-YYYY, MM-DD-YYYY
         r"\d{4}",  # YYYY just year
+        r"\d{1,2}(?:st|nd|rd|th)\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),?\s+\d{4}",  # 1st Nov, 2019
+        r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}(?:st|nd|rd|th),?\s+\d{4}",  # Nov 1st, 2019
+        r"\d{1,2}(?:st|nd|rd|th)\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}",  # 1st Nov 2019
+        # Add more date formats as needed
         # Add more date formats as needed
     ]
     return patterns
@@ -87,24 +101,26 @@ def filter_repositories_with_dates(org_name, token, filepath):
         token (str): GitHub personal access token.
 
     Returns:
-        list: List of repository names with date mentions.
+        dict: Dictionary with repository names as keys and lists of detected dates and line numbers as values.
     """
     github = authenticate_github(token)
     org = github.get_organization(org_name)
 
     date_patterns = get_date_patterns()
-    repos_with_dates = []
+    repos_with_dates = {}
     processed_repo = "processed_repo.txt"
     filewrite = "date_repo.txt"
 
     tm_repos = get_tm_repo_list(filepath, processed_repo)
     for tm_repo in tm_repos:
         repo = org.get_repo(tm_repo)
-
-        if find_date_mentions_in_repo(repo, date_patterns):
-            repos_with_dates.append(repo.name)
+        date_detected, date_line_number = find_date_mentions_in_repo(
+            repo, date_patterns
+        )
+        if date_detected:
+            repos_with_dates[repo.name] = date_line_number
             write_to_file([tm_repo], filewrite)
-            print(tm_repo)
+            print(tm_repo, date_line_number)
         write_to_file([tm_repo], processed_repo)
 
     return repos_with_dates
@@ -113,13 +129,16 @@ def filter_repositories_with_dates(org_name, token, filepath):
 if __name__ == "__main__":
     # Replace with your GitHub organization name and personal access token
     org_name = "MonlamAI"
-    token = "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"
+    token = "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"
     filepath = "list.txt"
+    date_file = "../../data/repo_dates.json"
 
     # Get repositories with date mentions
     repos_with_dates = filter_repositories_with_dates(org_name, token, filepath)
 
     # Print the list of repositories with date mentions
     print("Repositories containing date mentions:")
-    for repo_name in repos_with_dates:
+    for repo_name in repos_with_dates.keys():
         print(repo_name)
+    with open(date_file, "w") as json_file:
+        json.dump(repos_with_dates, json_file, indent=4)
